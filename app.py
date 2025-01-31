@@ -19,7 +19,7 @@ from telegram.ext import (
 YANDEX_API_KEY = os.getenv("AQVNznkv2cu-WerDTScb2YWsVBcomNIjvkzb9Tmy")  # Ключ из Яндекс.Облака
 TELEGRAM_TOKEN = os.getenv("8169183380:AAEp2I0Bb_Ljnzd4n8gMaDbVPLuFCi6BFDk")
 PORT = int(os.environ.get("PORT", 10000))
-WEBHOOK_URL = os.getenv("WEBHOOK_URL")
+WEBHOOK_URL = os.getenv("https://nearbyninjabot.onrender.com")
 
 # Параметры поиска
 MAX_RADIUS = 5000    # Максимальный радиус (метры)
