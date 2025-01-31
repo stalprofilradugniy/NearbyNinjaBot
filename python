@@ -17,7 +17,7 @@ from telegram.ext import (
 
 # Конфигурация
 YANDEX_API_KEY = os.getenv("YANDEX_API_KEY")  # Ключ из Яндекс.Облака
-TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+TELEGRAM_TOKEN = os.getenv("8169183380:AAEp2I0Bb_Ljnzd4n8gMaDbVPLuFCi6BFDk")
 PORT = int(os.environ.get("PORT", 10000))
 WEBHOOK_URL = os.getenv("WEBHOOK_URL")
 
