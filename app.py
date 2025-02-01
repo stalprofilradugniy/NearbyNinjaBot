@@ -145,7 +145,7 @@ class YandexCafeBot:
             props = cafe.get("properties", {})
             company_meta = props.get("CompanyMetaData", {})
             
-            name = company_meta.get("__name__", "Кафе без названия")
+            __name__ = company_meta.get("__name__", "Кафе без названия")
             address = company_meta.get("address", "Адрес не указан")
             rating = props.get("rating", "нет оценок")
             lon, lat = cafe["geometry"]["coordinates"]
@@ -212,6 +212,6 @@ class YandexCafeBot:
         logger.info("🤖 Яндекс-бот запущен!")
         self.updater.idle()
 
-if name == '__main__':
+if __name__ == '__main__':
     bot = YandexCafeBot()
     bot.run()
