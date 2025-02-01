@@ -31,11 +31,11 @@ RADIUS, LOCATION = range(2)
 
 # Настройка логов
 logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    format="%(asctime)s - %(__name__)s - %(levelname)s - %(message)s",
     level=logging.INFO,
     handlers=[logging.StreamHandler()]
 )
-logger = logging.getLogger(name)
+logger = logging.getLogger(__name__)
 
 class YandexCafeBot:
     def init(self):
