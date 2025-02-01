@@ -167,7 +167,7 @@ update.message.reply_html(
 return ConversationHandler.END
 
     # === Секция 9: Управление жизненным циклом ===
-    def cancel(self, update: Update, context: CallbackContext) -> int:
+def cancel(self, update: Update, context: CallbackContext) -> int:
         """Отмена поиска"""
         update.message.reply_text(
             "❌ Поиск отменен",
@@ -175,7 +175,7 @@ return ConversationHandler.END
         )
         return ConversationHandler.END
 
-    def graceful_shutdown(self, signum, frame):
+def graceful_shutdown(self, signum, frame):
         """Корректное завершение работы"""
         logger.info("🛑 Получен сигнал завершения...")
         self.updater.stop()
@@ -183,7 +183,7 @@ return ConversationHandler.END
         logger.info("✅ Ресурсы освобождены. Бот остановлен.")
         exit(0)
 
-    def run(self):
+def run(self):
         """Основной метод запуска"""
         dispatcher = self.updater.dispatcher
 
