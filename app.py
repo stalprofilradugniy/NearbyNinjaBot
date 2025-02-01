@@ -39,12 +39,12 @@ logger = logging.getLogger(__name__)
 
 class YandexCafeBot:
     def init(self):
-        # Инициализация компонентов бота
+        # 1. Инициализация компонентов бота
         self.updater = Updater(TELEGRAM_TOKEN, use_context=True)
         self.session = requests.Session()
 
     def run(self):
-        # Получение диспетчера
+        # 2. Теперь dispatcher будет доступен
         dispatcher = self.updater.dispatcher
 
     # ================== Обработчики команд ==================
