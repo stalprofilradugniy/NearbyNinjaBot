@@ -141,31 +141,31 @@ def _get_yandex_cafes(self, lon: float, lat: float, radius: int) -> list:
 
     # === Секция 8: Форматирование результатов ===
     def _send_results(self, update: Update, cafes: list, radius: int) -> int:
-        """Отправка результатов пользователю"""
-        results = []
+    """Форматирование результатов"""
+    results = []
+    
+    for cafe in cafes:
+        props = cafe.get("properties", {})
+        meta = props.get("CompanyMetaData", {})
         
-        for cafe in cafes:
-            props = cafe.get("properties", {})
-            meta = props.get("CompanyMetaData", {})
-            
-            name = meta.get("name", "Кафе без названия")
-            address = meta.get("address", "Адрес не указан")
-            rating = props.get("rating", "нет оценок")
-            lon, lat = cafe["geometry"]["coordinates"]
-            url = f"https://yandex.ru/maps/?ll={lon}%2C{lat}&z=17&pt={lon},{lat}"
-            
-            results.append(
-                f"☕️ <b>{name}</b>\n"
-                f"⭐ Рейтинг: {rating}\n"
-                f"📌 Адрес: {address}\n"
-                f"🌐 Ссылка: {url}"
-            )
-
-        update.message.reply_html(
-            f"🏆 Топ {len(results)} ближайших кафе в радиусе {radius} м:\n\n" + "\n\n".join(results),
-            reply_markup=ReplyKeyboardRemove()
+        name = meta.get("name", "Кафе без названия")
+        address = meta.get("address", "Адрес не указан")
+        rating = props.get("rating", "нет оценок")
+        lon, lat = cafe["geometry"]["coordinates"]
+        url = f"https://yandex.ru/maps/?ll={lon}%2C{lat}&z=17&pt={lon},{lat}"
+        
+        results.append(
+            f"☕️ <b>{name}</b>\n"
+            f"⭐ Рейтинг: {rating}\n"
+            f"📌 Адрес: {address}\n"
+            f"🌐 Ссылка: {url}"
         )
-        return ConversationHandler.END
+
+    update.message.reply_html(
+        f"🏆 Топ {len(results)} ближайших кафе в радиусе {radius} м:\n\n" + "\n\n".join(results),
+        reply_markup=ReplyKeyboardRemove()
+    )
+    return ConversationHandler.END
 
     # === Секция 9: Управление жизненным циклом ===
     def cancel(self, update: Update, context: CallbackContext) -> int:
