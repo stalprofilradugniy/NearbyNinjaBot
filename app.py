@@ -32,11 +32,11 @@ RADIUS, LOCATION = range(2)
 
 # === Секция 3: Настройка логов ===
 logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    format="%(asctime)s - %(__name__)s - %(levelname)s - %(message)s",
     level=logging.INFO,
     handlers=[logging.StreamHandler()]
 )
-logger = logging.getLogger(name)
+logger = logging.getLogger(__name__)
 
 # === Секция 4: Основной класс бота ===
 class YandexCafeBot:
@@ -149,7 +149,7 @@ def _send_results(self, update: Update, cafes: list, radius: int) -> int:
         props = cafe.get("properties", {})
         meta = props.get("CompanyMetaData", {})
         
-        name = meta.get("name", "Кафе без названия")
+        __name__ = meta.get("__name__", "Кафе без названия")
         address = meta.get("address", "Адрес не указан")
         rating = props.get("rating", "нет оценок")
         lon, lat = cafe["geometry"]["coordinates"]
@@ -157,7 +157,7 @@ def _send_results(self, update: Update, cafes: list, radius: int) -> int:
         
         # Форматирование информации о кафе
         results.append(
-            f"☕️ <b>{name}</b>\n"
+            f"☕️ <b>{__name__}</b>\n"
             f"⭐ Рейтинг: {rating}\n"
             f"📌 Адрес: {address}\n"
             f"🌐 Ссылка: {url}"
@@ -193,6 +193,6 @@ def graceful_shutdown(self, signum, frame):
     exit(0)
 
 # === Секция 10: Запуск приложения ===
-if name == 'main':
+if __name__ == 'main':
     bot = YandexCafeBot()
     bot.run()
