@@ -210,7 +210,7 @@ def _get_yandex_cafes(self, lon: float, lat: float, radius: int) -> list:
             listen="0.0.0.0",
             port=PORT,
             url_path=TELEGRAM_TOKEN,
-            webhook_url=f"{WEBHOOK_URL}/{TELEGRAM_TOKEN}"
+            webhook_url=f"{https://nearbyninjabot.onrender.com}/{8169183380:AAEp2I0Bb_Ljnzd4n8gMaDbVPLuFCi6BFDk}"
         )
 
         logger.info("🤖 Бот успешно запущен!")
