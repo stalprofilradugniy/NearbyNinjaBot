@@ -164,7 +164,7 @@ update.message.reply_html(
         f"🏆 Топ {len(results)} ближайших кафе в радиусе {radius} м:\n\n" + "\n\n".join(results),
         reply_markup=ReplyKeyboardRemove()
     )
-    return ConversationHandler.END
+return ConversationHandler.END
 
     # === Секция 9: Управление жизненным циклом ===
 def cancel(self, update: Update, context: CallbackContext) -> int:
