@@ -115,7 +115,7 @@ class YandexCafeBot:
         return ConversationHandler.END
 
     def _get_yandex_cafes(self, lon: float, lat: float, radius: int) -> list:
-"""Запрос к Яндекс.Картам"""
+   
         url = "https://search-maps.yandex.ru/v1/"
         params = {
             "apikey": YANDEX_API_KEY,
