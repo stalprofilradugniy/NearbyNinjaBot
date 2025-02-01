@@ -160,7 +160,7 @@ for cafe in cafes:
             f"🌐 Ссылка: {url}"
         )
 
-    update.message.reply_html(
+update.message.reply_html(
         f"🏆 Топ {len(results)} ближайших кафе в радиусе {radius} м:\n\n" + "\n\n".join(results),
         reply_markup=ReplyKeyboardRemove()
     )
