@@ -144,7 +144,7 @@ def _send_results(self, update: Update, cafes: list, radius: int) -> int:
         """Форматирование результатов"""
         results = []
     
-    for cafe in cafes:
+for cafe in cafes:
         props = cafe.get("properties", {})
         meta = props.get("CompanyMetaData", {})
         name = meta.get("name", "Кафе без названия")
