@@ -145,14 +145,14 @@ class YandexCafeBot:
             props = cafe.get("properties", {})
             company_meta = props.get("CompanyMetaData", {})
             
-            name = company_meta.get("name", "Кафе без названия")
+            name = company_meta.get("__name__", "Кафе без названия")
             address = company_meta.get("address", "Адрес не указан")
             rating = props.get("rating", "нет оценок")
             lon, lat = cafe["geometry"]["coordinates"]
             yandex_url = f"https://yandex.ru/maps/?ll={lon}%2C{lat}&z=17&pt={lon},{lat}"
             
             cafe_info = (
-                f"☕️ <b>{name}</b>\n"
+                f"☕️ <b>{__name__}</b>\n"
                 f"⭐ Рейтинг: {rating}\n"
                 f"📌 Адрес: {address}\n"
                 f"🌐 Ссылка: {yandex_url}"
