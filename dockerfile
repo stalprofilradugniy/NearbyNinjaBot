@@ -1,5 +1,5 @@
 FROM python:3.9-slim
-EXPOSE $PORT  # Явное указание порта
+EXPOSE $PORT
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
