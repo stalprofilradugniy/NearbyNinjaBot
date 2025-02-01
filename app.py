@@ -212,6 +212,6 @@ class YandexCafeBot:
         logger.info("🤖 Яндекс-бот запущен!")
         self.updater.idle()
 
-if name == 'main':
+if name == '__main__':
     bot = YandexCafeBot()
     bot.run()
