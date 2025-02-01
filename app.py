@@ -141,18 +141,21 @@ def _get_yandex_cafes(self, lon: float, lat: float, radius: int) -> list:
 
 # === Секция 8: Форматирование результатов ===
 def _send_results(self, update: Update, cafes: list, radius: int) -> int:
-        """Форматирование результатов"""
-        results = []
+    """Форматирование и отправка результатов пользователю"""
+    results = []
     
-for cafe in cafes:
+    # Формирование списка результатов
+    for cafe in cafes:
         props = cafe.get("properties", {})
         meta = props.get("CompanyMetaData", {})
+        
         name = meta.get("name", "Кафе без названия")
         address = meta.get("address", "Адрес не указан")
         rating = props.get("rating", "нет оценок")
         lon, lat = cafe["geometry"]["coordinates"]
         url = f"https://yandex.ru/maps/?ll={lon}%2C{lat}&z=17&pt={lon},{lat}"
         
+        # Форматирование информации о кафе
         results.append(
             f"☕️ <b>{name}</b>\n"
             f"⭐ Рейтинг: {rating}\n"
@@ -160,60 +163,34 @@ for cafe in cafes:
             f"🌐 Ссылка: {url}"
         )
 
-update.message.reply_html(
+    # Отправка форматированного сообщения
+    update.message.reply_html(
         f"🏆 Топ {len(results)} ближайших кафе в радиусе {radius} м:\n\n" + "\n\n".join(results),
         reply_markup=ReplyKeyboardRemove()
     )
-return ConversationHandler.END
+    
+    # Завершение диалога
+    return ConversationHandler.END # Теперь return ВНУТРИ метода!
 
-    # === Секция 9: Управление жизненным циклом ===
+# ===================================================================
+# Секция 9: Управление жизненным циклом
+# ===================================================================
+
 def cancel(self, update: Update, context: CallbackContext) -> int:
-        """Отмена поиска"""
-        update.message.reply_text(
-            "❌ Поиск отменен",
-            reply_markup=ReplyKeyboardRemove()
-        )
-        return ConversationHandler.END
+    """Обработчик отмены поиска"""
+    update.message.reply_text(
+        "❌ Поиск отменен",
+        reply_markup=ReplyKeyboardRemove()
+    )
+    return ConversationHandler.END
 
 def graceful_shutdown(self, signum, frame):
-        """Корректное завершение работы"""
-        logger.info("🛑 Получен сигнал завершения...")
-        self.updater.stop()
-        self.session.close()
-        logger.info("✅ Ресурсы освобождены. Бот остановлен.")
-        exit(0)
-
-def run(self):
-        """Основной метод запуска"""
-        dispatcher = self.updater.dispatcher
-
-        # Регистрация обработчиков
-        conv_handler = ConversationHandler(
-            entry_points=[CommandHandler('findcafe', self.find_cafe)],
-            states={
-                RADIUS: [MessageHandler(Filters.text & ~Filters.command, self.receive_radius)],
-                LOCATION: [MessageHandler(Filters.location, self.receive_location)],
-            },
-            fallbacks=[CommandHandler('cancel', self.cancel)],
-        )
-
-        dispatcher.add_handler(CommandHandler("start", self.start))
-        dispatcher.add_handler(conv_handler)
-
-        # Обработка сигналов
-        signal.signal(signal.SIGINT, self.graceful_shutdown)
-        signal.signal(signal.SIGTERM, self.graceful_shutdown)
-
-        # Настройка вебхуков
-        self.updater.start_webhook(
-            listen="0.0.0.0",
-            port=PORT,
-            url_path=TELEGRAM_TOKEN,
-            webhook_url=f"{https://nearbyninjabot.onrender.com}/{8169183380:AAEp2I0Bb_Ljnzd4n8gMaDbVPLuFCi6BFDk}"
-        )
-
-        logger.info("🤖 Бот успешно запущен!")
-        self.updater.idle()
+    """Корректное завершение работы бота"""
+    logger.info("🛑 Получен сигнал завершения...")
+    self.updater.stop()
+    self.session.close()
+    logger.info("✅ Ресурсы освобождены. Бот остановлен.")
+    exit(0)
 
 # === Секция 10: Запуск приложения ===
 if name == 'main':
