@@ -1,6 +1,7 @@
 # Telegram-бот для поиска кафе через Яндекс.Карты (Geosearch API)
 # Требуется API-ключ от Яндекс.Облака
 
+# === Секция 1: Импорты ===
 import os
 import logging
 import signal
@@ -15,10 +16,10 @@ from telegram.ext import (
     CallbackContext,
 )
 
-# Конфигурация
+# === Секция 2: Конфигурация ===
 TELEGRAM_TOKEN = os.getenv("8169183380:AAEp2I0Bb_Ljnzd4n8gMaDbVPLuFCi6BFDk")
 YANDEX_API_KEY = os.getenv("AQVNznkv2cu-WerDTScb2YWsVBcomNIjvkzb9Tmy")
-PORT = int(os.environ.get("PORT", 10000))
+PORT = int(os.environ.get("PORT", 10000))  # Используем переменную окружения
 WEBHOOK_URL = os.getenv("https://nearbyninjabot.onrender.com")
 
 # Параметры поиска
@@ -29,22 +30,24 @@ MAX_RESULTS = 3
 # Состояния диалога
 RADIUS, LOCATION = range(2)
 
-# Настройка логов
+# === Секция 3: Настройка логов ===
 logging.basicConfig(
-    format="%(asctime)s - %(__name__)s - %(levelname)s - %(message)s",
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     level=logging.INFO,
     handlers=[logging.StreamHandler()]
 )
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(name)
 
+# === Секция 4: Основной класс бота ===
 class YandexCafeBot:
     def init(self):
-        # 1. Инициализация компонентов бота
+        # Инициализация компонентов бота
         self.updater = Updater(TELEGRAM_TOKEN, use_context=True)
         self.session = requests.Session()
 
+    # === Секция 5: Обработчики команд ===
     def start(self, update: Update, context: CallbackContext) -> None:
-        """Обработчик команды /start"""
+        """Обработка команды /start"""
         user = update.effective_user
         update.message.reply_text(
             f"Привет, {user.first_name}! 👋\n"
@@ -54,15 +57,16 @@ class YandexCafeBot:
         )
 
     def find_cafe(self, update: Update, context: CallbackContext) -> int:
-        """Начало диалога поиска кафе"""
+        """Начало процесса поиска"""
         update.message.reply_text(
             f"📏 Введите радиус поиска в метрах ({MIN_RADIUS}-{MAX_RADIUS}):",
             reply_markup=ReplyKeyboardRemove()
         )
         return RADIUS
 
+    # === Секция 6: Обработка состояний ===
     def receive_radius(self, update: Update, context: CallbackContext) -> int:
-        """Обработка радиуса поиска"""
+        """Получение радиуса поиска"""
         try:
             radius = int(update.message.text)
             if not (MIN_RADIUS <= radius <= MAX_RADIUS):
@@ -90,6 +94,7 @@ class YandexCafeBot:
         )
         return LOCATION
 
+    # === Секция 7: Работа с API Яндекс ===
     def receive_location(self, update: Update, context: CallbackContext) -> int:
         """Обработка геолокации"""
         try:
@@ -113,16 +118,15 @@ class YandexCafeBot:
             update.message.reply_text("😞 В этом районе кафе не найдено.")
             
         return ConversationHandler.END
-
-    def _get_yandex_cafes(self, lon: float, lat: float, radius: int) -> list:
-   
+def _get_yandex_cafes(self, lon: float, lat: float, radius: int) -> list:
+        """Запрос к API Яндекс.Карт"""
         url = "https://search-maps.yandex.ru/v1/"
         params = {
             "apikey": YANDEX_API_KEY,
             "text": "кафе",
             "lang": "ru_RU",
             "ll": f"{lon},{lat}",
-            "spn": f"{self._degrees_for_radius(radius)}",
+            "spn": f"{(radius / 1000) * 0.009}",  # Конвертация метров в градусы
             "rspn": 1,
             "results": MAX_RESULTS,
             "type": "biz"
@@ -135,26 +139,23 @@ class YandexCafeBot:
             
         return response.get("features", [])[:MAX_RESULTS]
 
-    def _degrees_for_radius(self, radius_meters: int) -> float:
-        """Конвертация метров в градусы"""
-        return (radius_meters / 1000) * 0.009
-
+    # === Секция 8: Форматирование результатов ===
     def _send_results(self, update: Update, cafes: list, radius: int) -> int:
-        """Форматирование результатов"""
+        """Отправка результатов пользователю"""
         results = []
         
         for cafe in cafes:
             props = cafe.get("properties", {})
             meta = props.get("CompanyMetaData", {})
             
-            __name__ = meta.get("__name__", "Кафе без названия")
+            name = meta.get("name", "Кафе без названия")
             address = meta.get("address", "Адрес не указан")
             rating = props.get("rating", "нет оценок")
             lon, lat = cafe["geometry"]["coordinates"]
             url = f"https://yandex.ru/maps/?ll={lon}%2C{lat}&z=17&pt={lon},{lat}"
             
             results.append(
-                f"☕️ <b>{__name__}</b>\n"
+                f"☕️ <b>{name}</b>\n"
                 f"⭐ Рейтинг: {rating}\n"
                 f"📌 Адрес: {address}\n"
                 f"🌐 Ссылка: {url}"
@@ -166,6 +167,7 @@ class YandexCafeBot:
         )
         return ConversationHandler.END
 
+    # === Секция 9: Управление жизненным циклом ===
     def cancel(self, update: Update, context: CallbackContext) -> int:
         """Отмена поиска"""
         update.message.reply_text(
@@ -175,7 +177,7 @@ class YandexCafeBot:
         return ConversationHandler.END
 
     def graceful_shutdown(self, signum, frame):
-        """Корректное завершение"""
+        """Корректное завершение работы"""
         logger.info("🛑 Получен сигнал завершения...")
         self.updater.stop()
         self.session.close()
@@ -183,7 +185,7 @@ class YandexCafeBot:
         exit(0)
 
     def run(self):
-        """Запуск бота"""
+        """Основной метод запуска"""
         dispatcher = self.updater.dispatcher
 
         # Регистрация обработчиков
@@ -203,7 +205,7 @@ class YandexCafeBot:
         signal.signal(signal.SIGINT, self.graceful_shutdown)
         signal.signal(signal.SIGTERM, self.graceful_shutdown)
 
-        # Для работы через вебхуки
+        # Настройка вебхуков
         self.updater.start_webhook(
             listen="0.0.0.0",
             port=PORT,
@@ -214,6 +216,7 @@ class YandexCafeBot:
         logger.info("🤖 Бот успешно запущен!")
         self.updater.idle()
 
-if __name__ == 'main':
+# === Секция 10: Запуск приложения ===
+if name == 'main':
     bot = YandexCafeBot()
     bot.run()
