@@ -31,11 +31,11 @@ RADIUS, LOCATION = range(2)
 
 # Настройка логов
 logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    format="%(asctime)s - %(__name__)s - %(levelname)s - %(message)s",
     level=logging.INFO,
     handlers=[logging.StreamHandler()]
 )
-logger = logging.getLogger(name)
+logger = logging.getLogger(__name__)
 
 class YandexCafeBot:
     def init(self):
@@ -147,14 +147,14 @@ class YandexCafeBot:
             props = cafe.get("properties", {})
             meta = props.get("CompanyMetaData", {})
             
-            name = meta.get("name", "Кафе без названия")
+            __name__ = meta.get("__name__", "Кафе без названия")
             address = meta.get("address", "Адрес не указан")
             rating = props.get("rating", "нет оценок")
             lon, lat = cafe["geometry"]["coordinates"]
             url = f"https://yandex.ru/maps/?ll={lon}%2C{lat}&z=17&pt={lon},{lat}"
             
             results.append(
-                f"☕️ <b>{name}</b>\n"
+                f"☕️ <b>{__name__}</b>\n"
                 f"⭐ Рейтинг: {rating}\n"
                 f"📌 Адрес: {address}\n"
                 f"🌐 Ссылка: {url}"
@@ -214,6 +214,6 @@ class YandexCafeBot:
         logger.info("🤖 Бот успешно запущен!")
         self.updater.idle()
 
-if name == 'main':
+if __name__ == 'main':
     bot = YandexCafeBot()
     bot.run()
