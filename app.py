@@ -139,8 +139,8 @@ def _get_yandex_cafes(self, lon: float, lat: float, radius: int) -> list:
             
         return response.get("features", [])[:MAX_RESULTS]
 
-    # === Секция 8: Форматирование результатов ===
-    def _send_results(self, update: Update, cafes: list, radius: int) -> int:
+# === Секция 8: Форматирование результатов ===
+def _send_results(self, update: Update, cafes: list, radius: int) -> int:
         """Форматирование результатов"""
         results = []
     
