@@ -141,13 +141,12 @@ def _get_yandex_cafes(self, lon: float, lat: float, radius: int) -> list:
 
     # === Секция 8: Форматирование результатов ===
     def _send_results(self, update: Update, cafes: list, radius: int) -> int:
-    """Форматирование результатов"""
+        """Форматирование результатов"""
         results = []
     
     for cafe in cafes:
         props = cafe.get("properties", {})
         meta = props.get("CompanyMetaData", {})
-        
         name = meta.get("name", "Кафе без названия")
         address = meta.get("address", "Адрес не указан")
         rating = props.get("rating", "нет оценок")
