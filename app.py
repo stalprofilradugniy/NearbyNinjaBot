@@ -18,7 +18,7 @@ from telegram.ext import (
 # Конфигурация
 TELEGRAM_TOKEN = os.getenv("8169183380:AAEp2I0Bb_Ljnzd4n8gMaDbVPLuFCi6BFDk")
 YANDEX_API_KEY = os.getenv("AQVNznkv2cu-WerDTScb2YWsVBcomNIjvkzb9Tmy")
-PORT = int(os.environ.get("PORT", 10000))
+PORT = int(os.environ.get("PORT", 4000))
 WEBHOOK_URL = os.getenv("https://nearbyninjabot.onrender.com")
 
 # Параметры поиска
