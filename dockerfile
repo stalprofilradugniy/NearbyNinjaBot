@@ -1,5 +1,5 @@
 FROM python:3.9-slim
-EXPOSE 4000
+EXPOSE 10000  # Явное указание порта
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
