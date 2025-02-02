@@ -17,7 +17,7 @@ from telegram.ext import (
 TELEGRAM_TOKEN = os.getenv("8169183380:AAEp2I0Bb_Ljnzd4n8gMaDbVPLuFCi6BFDk")    # Токен бота из переменных окружения
 YANDEX_API_KEY = os.getenv("AQVNznkv2cu-WerDTScb2YWsVBcomNIjvkzb9Tmy")    # Ключ Яндекс.Карт
 PORT = int(os.environ.get("PORT", 10000))       # Порт для вебхуков
-WEBHOOK_URL = os.getenv("https://nearbyninjabot.onrender.com")          # Базовый URL приложения
+# WEBHOOK_URL = os.getenv("https://nearbyninjabot.onrender.com")          # Базовый URL приложения
 
 # Параметры поиска
 MAX_RADIUS = 5000       # Максимальный радиус поиска (метры)
@@ -27,11 +27,11 @@ MAX_RESULTS = 3         # Количество возвращаемых резу
 # Состояния диалога
 RADIUS, LOCATION = range(2)
 
-TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+TELEGRAM_TOKEN = os.getenv("8169183380:AAEp2I0Bb_Ljnzd4n8gMaDbVPLuFCi6BFDk")
 if not TELEGRAM_TOKEN:
     raise ValueError("TELEGRAM_TOKEN не задан в переменных окружения!")
 
-YANDEX_API_KEY = os.getenv("YANDEX_API_KEY")
+YANDEX_API_KEY = os.getenv("AQVNznkv2cu-WerDTScb2YWsVBcomNIjvkzb9Tmy")
 if not YANDEX_API_KEY:
     raise ValueError("YANDEX_API_KEY не задан в переменных окружения!")
 
