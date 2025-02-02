@@ -27,6 +27,14 @@ MAX_RESULTS = 3         # Количество возвращаемых резу
 # Состояния диалога
 RADIUS, LOCATION = range(2)
 
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+if not TELEGRAM_TOKEN:
+    raise ValueError("TELEGRAM_TOKEN не задан в переменных окружения!")
+
+YANDEX_API_KEY = os.getenv("YANDEX_API_KEY")
+if not YANDEX_API_KEY:
+    raise ValueError("YANDEX_API_KEY не задан в переменных окружения!")
+
 # ================== СЕКЦИЯ 3: НАСТРОЙКА ЛОГГИНГА ==================
 logging.basicConfig(
     format="%(asctime)s - %(__name__)s - %(levelname)s - %(message)s",
@@ -218,5 +226,13 @@ class YandexCafeBot:
 
 # ================== ТОЧКА ВХОДА ==================
 if __name__ == '__main__':
+    if not TELEGRAM_TOKEN:
+        logger.error("❌ TELEGRAM_TOKEN не задан! Проверьте переменные окружения.")
+        exit(1)
+    
+    if not YANDEX_API_KEY:
+        logger.error("❌ YANDEX_API_KEY не задан! Проверьте переменные окружения.")
+        exit(1)
+
     bot = YandexCafeBot()
     bot.run()
