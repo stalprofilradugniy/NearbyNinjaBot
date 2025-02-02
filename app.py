@@ -28,12 +28,12 @@ MAX_RESULTS = 3         # Количество возвращаемых резу
 RADIUS, LOCATION = range(2)
 
 TELEGRAM_TOKEN = os.getenv("8169183380:AAEp2I0Bb_Ljnzd4n8gMaDbVPLuFCi6BFDk")
-if not TELEGRAM_TOKEN:
-    raise ValueError("TELEGRAM_TOKEN не задан в переменных окружения!")
+# if not TELEGRAM_TOKEN:
+#     raise ValueError("TELEGRAM_TOKEN не задан в переменных окружения!")
 
 YANDEX_API_KEY = os.getenv("AQVNznkv2cu-WerDTScb2YWsVBcomNIjvkzb9Tmy")
-if not YANDEX_API_KEY:
-    raise ValueError("YANDEX_API_KEY не задан в переменных окружения!")
+# if not YANDEX_API_KEY:
+#     raise ValueError("YANDEX_API_KEY не задан в переменных окружения!")
 
 # ================== СЕКЦИЯ 3: НАСТРОЙКА ЛОГГИНГА ==================
 logging.basicConfig(
