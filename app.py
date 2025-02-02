@@ -217,9 +217,9 @@ if __name__ == '__main__':
         "WEBHOOK_URL": WEBHOOK_URL
     }
     
-    for name, value in required_vars.items():
+    for __name__, value in required_vars.items():
         if not value:
-            logger.error(f"❌ Переменная окружения {name} не задана!")
+            logger.error(f"❌ Переменная окружения {__name__} не задана!")
             exit(1)
 
     bot = YandexCafeBot()
