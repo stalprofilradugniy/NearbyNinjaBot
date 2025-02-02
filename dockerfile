@@ -1,14 +1,15 @@
-FROM python:3.9
+FROM python:3.9-slim
 
-ENV PYTHONUNBUFFERED=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=on
+# Открываем порт, который использует dockhost по умолчанию
+EXPOSE 5000
 
 WORKDIR /app
 
-COPY requirements.txt /app/requirements.txt
+# Копируем зависимости первыми для кэширования
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
+COPY . .
 
-COPY . /app
-
-CMD ["python", "app.py"]
+# Используем gunicorn для production
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "app:bot"]
