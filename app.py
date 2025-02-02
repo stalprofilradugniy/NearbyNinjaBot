@@ -13,34 +13,32 @@ from telegram.ext import (
     CallbackContext,
 )
 
-# ================== СЕКЦИЯ 2: КОНФИГУРАЦИЯ ==================
-TELEGRAM_TOKEN = os.getenv("8169183380:AAEp2I0Bb_Ljnzd4n8gMaDbVPLuFCi6BFDk")    # Токен бота из переменных окружения
-YANDEX_API_KEY = os.getenv("AQVNznkv2cu-WerDTScb2YWsVBcomNIjvkzb9Tmy")    # Ключ Яндекс.Карт
-PORT = int(os.environ.get("PORT", 10000))       # Порт для вебхуков
-# WEBHOOK_URL = os.getenv("https://nearbyninjabot.onrender.com")          # Базовый URL приложения
+# ================== Конфигурация ==================
+TELEGRAM_TOKEN = os.getenv("TG_TOKEN")          # Изменил имя переменной для dockhost
+YANDEX_API_KEY = os.getenv("YANDEX_API_KEY")
+PORT = int(os.environ.get("PORT", 5000))        # Стандартный порт для dockhost
+WEBHOOK_URL = os.getenv("WEBHOOK_URL")          # Будет предоставлен dockhost
 
 # Параметры поиска
-MAX_RADIUS = 5000       # Максимальный радиус поиска (метры)
-MIN_RADIUS = 100        # Минимальный радиус
-MAX_RESULTS = 3         # Количество возвращаемых результатов
+MAX_RADIUS = 5000
+MIN_RADIUS = 100
+MAX_RESULTS = 3
 
 # Состояния диалога
 RADIUS, LOCATION = range(2)
 
-# ================== СЕКЦИЯ 3: НАСТРОЙКА ЛОГГИНГА ==================
+# Настройка логов
 logging.basicConfig(
-    format="%(asctime)s - %(__name__)s - %(levelname)s - %(message)s",
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     level=logging.INFO,
     handlers=[logging.StreamHandler()]
 )
 logger = logging.getLogger(__name__)
 
-# ================== СЕКЦИЯ 4: ОСНОВНОЙ КЛАСС БОТА ==================
 class YandexCafeBot:
     def __init__(self):
-        """Инициализация основных компонентов бота"""
-        self.updater = Updater(TELEGRAM_TOKEN, use_context=True)  # Инициализация Updater
-        self.session = requests.Session()                         # HTTP-сессия для запросов
+        self.updater = Updater(TELEGRAM_TOKEN, use_context=True)
+        self.session = requests.Session()
 
     # ============== СЕКЦИЯ 5: ОБРАБОТЧИКИ КОМАНД ==============
     def start(self, update: Update, context: CallbackContext) -> None:
@@ -184,10 +182,10 @@ class YandexCafeBot:
 
     # ============== СЕКЦИЯ 10: ЗАПУСК ПРИЛОЖЕНИЯ ==============
     def run(self):
-        """Основной метод запуска бота"""
+        """Запуск для dockhost"""
         dispatcher = self.updater.dispatcher
 
-        # Настройка обработчиков команд
+        # Регистрация обработчиков
         conv_handler = ConversationHandler(
             entry_points=[CommandHandler('findcafe', self.find_cafe)],
             states={
@@ -197,34 +195,32 @@ class YandexCafeBot:
             fallbacks=[CommandHandler('cancel', self.cancel)],
         )
 
-        # Регистрация обработчиков
         dispatcher.add_handler(CommandHandler("start", self.start))
         dispatcher.add_handler(conv_handler)
 
-        # Настройка обработки сигналов
-        signal.signal(signal.SIGINT, self.graceful_shutdown)
-        signal.signal(signal.SIGTERM, self.graceful_shutdown)
-
-        # Запуск вебхуков
+        # Настройка вебхуков
         self.updater.start_webhook(
-            listen="0.0.0.0",    # Критически важно для Docker
+            listen="0.0.0.0",
             port=PORT,
             url_path=TELEGRAM_TOKEN,
             webhook_url=f"{WEBHOOK_URL}/{TELEGRAM_TOKEN}"
         )
 
-        logger.info(f"🤖 Бот запущен на порту {PORT}")
+        logger.info(f"🚀 Бот запущен на {WEBHOOK_URL}")
         self.updater.idle()
 
-# ================== ТОЧКА ВХОДА ==================
 if __name__ == '__main__':
-    if not TELEGRAM_TOKEN:
-        logger.error("❌ TELEGRAM_TOKEN не задан! Проверьте переменные окружения.")
-        exit(1)
+    # Проверка переменных окружения
+    required_vars = {
+        "TG_TOKEN": TELEGRAM_TOKEN,
+        "YANDEX_API_KEY": YANDEX_API_KEY,
+        "WEBHOOK_URL": WEBHOOK_URL
+    }
     
-    if not YANDEX_API_KEY:
-        logger.error("❌ YANDEX_API_KEY не задан! Проверьте переменные окружения.")
-        exit(1)
+    for name, value in required_vars.items():
+        if not value:
+            logger.error(f"❌ Переменная окружения {name} не задана!")
+            exit(1)
 
     bot = YandexCafeBot()
     bot.run()
