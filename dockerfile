@@ -1,7 +1,14 @@
-FROM python:3.9-slim
-EXPOSE 10000
+FROM python:3.9
+
+ENV PYTHONUNBUFFERED=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=on
+
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-COPY . .
-CMD ["python", "app.py"]
+
+COPY requirements.txt /app/requirements.txt
+
+RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
+
+COPY . /app
+
+CMD ["python", "main.py"]
